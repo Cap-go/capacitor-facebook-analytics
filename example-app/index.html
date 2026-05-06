@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@capgo/capacitor-facebook-analytics Example</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>@capgo/capacitor-facebook-analytics</h1>
+      <p class="lead">Validate the native Facebook App Events bridge.</p>
+
+      <label for="event-name">Event name</label>
+      <input id="event-name" type="text" value="fb_mobile_complete_registration" />
+
+      <div class="actions">
+        <button id="log-event">Log event</button>
+        <button id="get-tracking-status">Tracking status</button>
+        <button id="get-version">Get plugin version</button>
+      </div>
+
+      <pre id="plugin-output">Press a button to run an action.</pre>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
