@@ -1,6 +1,6 @@
 {
   "name": "@capgo/capacitor-facebook-analytics",
-  "version": "8.1.3",
+  "version": "8.1.4",
   "description": "Capacitor plugin for Meta/Facebook App Events analytics.",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",
