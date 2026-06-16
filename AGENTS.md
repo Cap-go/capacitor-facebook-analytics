@@ -38,3 +38,7 @@ bun run verify:web
 - Keep iOS and Android APIs behaviorally aligned.
 - Use JVM 21 for Android builds.
 - Keep the plugin major version aligned with the Capacitor major version.
+
+## Timeout Policy
+
+- Keep CI, script, and runtime timeouts at 10 minutes or less. Use `timeout-minutes: 10` or lower in GitHub Actions and cap timeout values at `600000` ms, `600` seconds, or `10m` unless explicitly requested.
