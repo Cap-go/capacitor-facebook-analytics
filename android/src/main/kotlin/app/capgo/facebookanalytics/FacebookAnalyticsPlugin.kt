@@ -21,6 +21,10 @@ class FacebookAnalyticsPlugin : Plugin() {
     private val implementation = FacebookAnalytics()
     private lateinit var logger: AppEventsLogger
 
+    override fun load() {
+        // Keep Capacitor registration side-effect free until Meta SDK metadata is configured.
+    }
+
     @PluginMethod
     fun initAppEvents(call: PluginCall) {
         val application = context.applicationContext as? Application
