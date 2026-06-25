@@ -21,10 +21,6 @@ class FacebookAnalyticsPlugin : Plugin() {
     private val implementation = FacebookAnalytics()
     private lateinit var logger: AppEventsLogger
 
-    override fun load() {
-        logger = AppEventsLogger.newLogger(context)
-    }
-
     @PluginMethod
     fun initAppEvents(call: PluginCall) {
         val application = context.applicationContext as? Application
@@ -34,8 +30,12 @@ class FacebookAnalyticsPlugin : Plugin() {
             return
         }
 
-        AppEventsLogger.activateApp(application)
-        call.resolve()
+        try {
+            AppEventsLogger.activateApp(application)
+            call.resolve()
+        } catch (error: FacebookException) {
+            call.reject(error.message ?: "Failed to activate Facebook App Events")
+        }
     }
 
     @PluginMethod
