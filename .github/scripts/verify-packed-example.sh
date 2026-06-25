@@ -44,6 +44,11 @@ case "$platform" in
       bunx cap add android
     fi
     bunx cap sync android
+    plugins_json="android/app/src/main/assets/capacitor.plugins.json"
+    if ! grep -Fq '"classpath": "app.capgo.facebookanalytics.FacebookAnalyticsPlugin"' "$plugins_json"; then
+      echo "FacebookAnalytics Android plugin was not registered in $plugins_json"
+      exit 1
+    fi
     cd android
     ./gradlew build test
     ;;

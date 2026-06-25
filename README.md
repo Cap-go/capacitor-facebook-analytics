@@ -99,6 +99,19 @@ Add the string resources in `android/app/src/main/res/values/strings.xml`:
 <string name="facebook_client_token">YOUR_FACEBOOK_CLIENT_TOKEN</string>
 ```
 
+## Troubleshooting
+
+### `"FacebookAnalytics" plugin is not implemented on android`
+
+This usually means Capacitor did not register the native Android plugin. Check the following:
+
+1. Run `bunx cap sync` after installing or upgrading the plugin.
+2. Confirm `@capgo/capacitor-facebook-analytics` is listed in the Android sync output.
+3. Add the Meta `ApplicationId` and `ClientToken` entries from the Android setup section above.
+4. Upgrade to `@capgo/capacitor-facebook-analytics@8.1.7` or newer if you are on an older build.
+
+If Meta SDK setup is missing, event calls can still reject with a clear error, but the plugin itself should register on Android once sync succeeds.
+
 ## API
 
 <docgen-index>
