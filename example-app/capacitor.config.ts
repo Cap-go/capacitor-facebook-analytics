@@ -4,7 +4,7 @@ import pkg from './package.json';
 
 const config: CapacitorConfig = {
   appId: 'app.capgo.facebookanalytics.example',
-  appName: 'Facebook Analytics Example',
+  appName: '@capgo/capacitor-facebook-analytics',
   webDir: 'dist',
   plugins: {
     SplashScreen: {
