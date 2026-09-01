@@ -20,8 +20,11 @@ public class FacebookAnalyticsPlugin: CAPPlugin, CAPBridgedPlugin {
     private let implementation = FacebookAnalytics()
 
     @objc func initAppEvents(_ call: CAPPluginCall) {
-        AppEvents.shared.activateApp()
-        call.resolve()
+        DispatchQueue.main.async {
+            ApplicationDelegate.shared.initializeSDK()
+            AppEvents.shared.activateApp()
+            call.resolve()
+        }
     }
 
     @objc func logEvent(_ call: CAPPluginCall) {
