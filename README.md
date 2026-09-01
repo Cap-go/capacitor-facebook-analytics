@@ -40,6 +40,7 @@ import {
 } from '@capgo/capacitor-facebook-analytics';
 
 await FacebookAnalytics.enableAdvertiserTracking();
+await FacebookAnalytics.initAppEvents();
 
 await FacebookAnalytics.logEvent({
   event: FacebookEventName.CompletedRegistration,
@@ -82,6 +83,8 @@ Add your Meta values to the app `Info.plist`:
 ```
 
 When advertiser tracking is allowed by your consent flow, call `enableAdvertiserTracking()` before logging events.
+
+If automatic Meta App Event logging is disabled (`FacebookAutoLogAppEventsEnabled` = `false`) so initialization can wait for consent, call `initAppEvents()` only after that consent and ATT flow. On iOS this also initializes FBSDK. Do not call `ApplicationDelegate.shared.initializeSDK()` from `AppDelegate` in that flow; it would start Meta before those gates pass.
 
 ### Android
 
@@ -139,10 +142,17 @@ Facebook App Events analytics bridge.
 initAppEvents() => Promise<void>
 ```
 
-Activate Facebook App Events.
+Initialize the Facebook SDK and activate App Events.
 
 Call this when automatic app event logging is disabled and you want to
-explicitly mark the app as activated.
+start sending events after your consent / ATT flow.
+
+On iOS this initializes FBSDK on the main thread, then activates App
+Events. `activateApp()` alone is not enough when automatic SDK
+initialization is delayed or disabled.
+
+Do not initialize Facebook from `AppDelegate` for consent-gated apps;
+call this method after the user grants advertising measurement consent.
 
 --------------------
 

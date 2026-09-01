@@ -82,10 +82,17 @@ export interface PluginVersionResult {
  */
 export interface FacebookAnalyticsPlugin {
   /**
-   * Activate Facebook App Events.
+   * Initialize the Facebook SDK and activate App Events.
    *
    * Call this when automatic app event logging is disabled and you want to
-   * explicitly mark the app as activated.
+   * start sending events after your consent / ATT flow.
+   *
+   * On iOS this initializes FBSDK on the main thread, then activates App
+   * Events. `activateApp()` alone is not enough when automatic SDK
+   * initialization is delayed or disabled.
+   *
+   * Do not initialize Facebook from `AppDelegate` for consent-gated apps;
+   * call this method after the user grants advertising measurement consent.
    */
   initAppEvents(): Promise<void>;
 
