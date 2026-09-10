@@ -88,8 +88,10 @@ export interface FacebookAnalyticsPlugin {
    * start sending events after your consent / ATT flow.
    *
    * On iOS this initializes FBSDK on the main thread, then activates App
-   * Events. `activateApp()` alone is not enough when automatic SDK
-   * initialization is delayed or disabled.
+   * Events. On Android this calls `FacebookSdk.sdkInitialize()` when the
+   * SDK was not auto-initialized (for example when `FacebookInitProvider`
+   * was removed or `AutoInitEnabled` is false). `activateApp()` alone is
+   * not enough when automatic SDK initialization is delayed or disabled.
    *
    * Do not initialize Facebook from `AppDelegate` for consent-gated apps;
    * call this method after the user grants advertising measurement consent.

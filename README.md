@@ -84,7 +84,7 @@ Add your Meta values to the app `Info.plist`:
 
 When advertiser tracking is allowed by your consent flow, call `enableAdvertiserTracking()` before logging events.
 
-If automatic Meta App Event logging is disabled (`FacebookAutoLogAppEventsEnabled` = `false`) so initialization can wait for consent, call `initAppEvents()` only after that consent and ATT flow. On iOS this also initializes FBSDK. Do not call `ApplicationDelegate.shared.initializeSDK()` from `AppDelegate` in that flow; it would start Meta before those gates pass.
+If automatic Meta App Event logging is disabled (`FacebookAutoLogAppEventsEnabled` = `false`) so initialization can wait for consent, call `initAppEvents()` only after that consent and ATT flow. On iOS and Android this also initializes the Facebook SDK when it was not auto-initialized. Do not call `ApplicationDelegate.shared.initializeSDK()` from `AppDelegate` in that flow; it would start Meta before those gates pass.
 
 ### Android
 
@@ -148,8 +148,10 @@ Call this when automatic app event logging is disabled and you want to
 start sending events after your consent / ATT flow.
 
 On iOS this initializes FBSDK on the main thread, then activates App
-Events. `activateApp()` alone is not enough when automatic SDK
-initialization is delayed or disabled.
+Events. On Android this calls `FacebookSdk.sdkInitialize()` when the
+SDK was not auto-initialized (for example when `FacebookInitProvider`
+was removed or `AutoInitEnabled` is false). `activateApp()` alone is
+not enough when automatic SDK initialization is delayed or disabled.
 
 Do not initialize Facebook from `AppDelegate` for consent-gated apps;
 call this method after the user grants advertising measurement consent.

@@ -35,6 +35,11 @@ class FacebookAnalyticsPlugin : Plugin() {
         }
 
         try {
+            if (!FacebookSdk.isInitialized()) {
+                @Suppress("DEPRECATION")
+                FacebookSdk.sdkInitialize(application)
+            }
+
             AppEventsLogger.activateApp(application)
             call.resolve()
         } catch (error: FacebookException) {
