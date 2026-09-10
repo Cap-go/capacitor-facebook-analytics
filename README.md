@@ -84,7 +84,7 @@ Add your Meta values to the app `Info.plist`:
 
 When advertiser tracking is allowed by your consent flow, call `enableAdvertiserTracking()` before logging events.
 
-If automatic Meta App Event logging is disabled (`FacebookAutoLogAppEventsEnabled` = `false`) so initialization can wait for consent, call `initAppEvents()` only after that consent and ATT flow. On iOS and Android this also initializes the Facebook SDK when it was not auto-initialized. Do not call `ApplicationDelegate.shared.initializeSDK()` from `AppDelegate` in that flow; it would start Meta before those gates pass.
+If automatic Meta App Event logging is disabled (`FacebookAutoLogAppEventsEnabled` = `false`) so initialization can wait for consent, call `initAppEvents()` only after that consent and ATT flow. On iOS this initializes FBSDK before activating App Events. On Android, `FacebookInitProvider` normally performs basic `sdkInitialize()` at startup while `AutoInitEnabled` and `AutoLogAppEventsEnabled` control full initialization and automatic event logging; `initAppEvents()` completes basic init when needed (for example if the provider was removed) and then calls `activateApp()`. Do not call `ApplicationDelegate.shared.initializeSDK()` from `AppDelegate` in that flow; it would start Meta before those gates pass.
 
 ### Android
 
@@ -148,10 +148,17 @@ Call this when automatic app event logging is disabled and you want to
 start sending events after your consent / ATT flow.
 
 On iOS this initializes FBSDK on the main thread, then activates App
-Events. On Android this calls `FacebookSdk.sdkInitialize()` when the
-SDK was not auto-initialized (for example when `FacebookInitProvider`
-was removed or `AutoInitEnabled` is false). `activateApp()` alone is
-not enough when automatic SDK initialization is delayed or disabled.
+Events.
+
+On Android, `FacebookInitProvider` normally runs basic SDK setup via
+`FacebookSdk.sdkInitialize()` at app start. `com.facebook.sdk.AutoInitEnabled`
+controls whether that path also calls `FacebookSdk.fullyInitialize()`
+(server communication). `com.facebook.sdk.AutoLogAppEventsEnabled`
+controls automatic `activateApp()` logging. When the provider was removed
+(for example by `@capgo/capacitor-social-login`) or basic init never
+completed, this method calls `sdkInitialize()` and waits for its
+`InitializeCallback` before calling `activateApp()`. `activateApp()`
+alone is not enough when the SDK was never initialized.
 
 Do not initialize Facebook from `AppDelegate` for consent-gated apps;
 call this method after the user grants advertising measurement consent.
