@@ -41,7 +41,7 @@ class FacebookAnalyticsPlugin : Plugin() {
                 object : FacebookSdk.InitializeCallback {
                     override fun onInitialized() {
                         try {
-                            FacebookSdk.fullyInitialize()
+                            FacebookSdk.setAutoInitEnabled(true)
                             AppEventsLogger.activateApp(application)
                             call.resolve()
                         } catch (error: FacebookException) {

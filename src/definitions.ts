@@ -97,9 +97,10 @@ export interface FacebookAnalyticsPlugin {
    * controls automatic `activateApp()` logging. When the provider was removed
    * (for example by `@capgo/capacitor-social-login`) or basic init never
    * completed, this method calls `sdkInitialize()` and waits for its
-   * `InitializeCallback`, then calls `fullyInitialize()` and
-   * `activateApp()`. `activateApp()` alone is not enough when the SDK
-   * was never initialized or only basic initialization completed.
+   * `InitializeCallback`, then enables full initialization via
+   * `setAutoInitEnabled(true)` before calling `activateApp()`.
+   * `activateApp()` alone is not enough when the SDK was never
+   * initialized or only basic initialization completed.
    *
    * Do not initialize Facebook from `AppDelegate` for consent-gated apps;
    * call this method after the user grants advertising measurement consent.
