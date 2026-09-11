@@ -88,8 +88,19 @@ export interface FacebookAnalyticsPlugin {
    * start sending events after your consent / ATT flow.
    *
    * On iOS this initializes FBSDK on the main thread, then activates App
-   * Events. `activateApp()` alone is not enough when automatic SDK
-   * initialization is delayed or disabled.
+   * Events.
+   *
+   * On Android, `FacebookInitProvider` normally runs basic SDK setup via
+   * `FacebookSdk.sdkInitialize()` at app start. `com.facebook.sdk.AutoInitEnabled`
+   * controls whether that path also calls `FacebookSdk.fullyInitialize()`
+   * (server communication). `com.facebook.sdk.AutoLogAppEventsEnabled`
+   * controls automatic `activateApp()` logging. When the provider was removed
+   * (for example by `@capgo/capacitor-social-login`) or basic init never
+   * completed, this method calls `sdkInitialize()` and waits for its
+   * `InitializeCallback`, then enables full initialization via
+   * `setAutoInitEnabled(true)` before calling `activateApp()`.
+   * `activateApp()` alone is not enough when the SDK was never
+   * initialized or only basic initialization completed.
    *
    * Do not initialize Facebook from `AppDelegate` for consent-gated apps;
    * call this method after the user grants advertising measurement consent.

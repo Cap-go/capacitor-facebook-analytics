@@ -35,8 +35,21 @@ class FacebookAnalyticsPlugin : Plugin() {
         }
 
         try {
-            AppEventsLogger.activateApp(application)
-            call.resolve()
+            @Suppress("DEPRECATION")
+            FacebookSdk.sdkInitialize(
+                application,
+                object : FacebookSdk.InitializeCallback {
+                    override fun onInitialized() {
+                        try {
+                            FacebookSdk.setAutoInitEnabled(true)
+                            AppEventsLogger.activateApp(application)
+                            call.resolve()
+                        } catch (error: FacebookException) {
+                            call.reject(error.message ?: "Failed to activate Facebook App Events")
+                        }
+                    }
+                },
+            )
         } catch (error: FacebookException) {
             call.reject(error.message ?: "Failed to activate Facebook App Events")
         }
