@@ -20,7 +20,7 @@ Send Meta (Facebook) App Events from your Capacitor app on iOS and Android to me
 - **App Events**: `initAppEvents()` starts the Facebook SDK and activates App Events.
 - **Custom events**: `logEvent()` logs any event with parameters.
 - **Purchases**: `logPurchase()` logs revenue with currency.
-- **Advertiser tracking**: `enableAdvertiserTracking()`, `disableAdvertiserTracking()` and `getAdvertiserTrackingStatus()`, aligned with App Tracking Transparency on iOS.
+- **Advertiser tracking**: `enableAdvertiserTracking()`, `disableAdvertiserTracking()` and `getAdvertiserTrackingStatus()`. On iOS 17 and later the status reflects App Tracking Transparency. On iOS 16 and earlier the setters change the Facebook SDK flag.
 - **Platforms**: iOS and Android. Uses the official Facebook SDKs. Event logging is not available on web.
 
 ## Install
