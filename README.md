@@ -1,13 +1,27 @@
 # @capgo/capacitor-facebook-analytics
 
-<a href="https://capgo.app/"><img src="https://capgo.app/readme-banner.svg?repo=Cap-go/capacitor-facebook-analytics" alt="Capgo - Instant updates for Capacitor" /></a>
+Send Meta (Facebook) App Events from your Capacitor app on iOS and Android to measure installs, purchases and conversions for your Meta ad campaigns.
+
+<a href="https://capgo.app/?ref=plugin_facebook_analytics"><img src="https://capgo.app/readme-banner.svg?repo=Cap-go/capacitor-facebook-analytics" alt="Capgo - Instant updates for Capacitor" /></a>
 
 <div align="center">
-  <h2><a href="https://capgo.app/?ref=plugin_facebook_analytics">Get Instant updates for your App with Capgo</a></h2>
-  <h2><a href="https://capgo.app/consulting/?ref=plugin_facebook_analytics">Missing a feature? We'll build the plugin for you</a></h2>
+  <p><b>Capgo</b>: open-source live updates for Ionic and Capacitor apps. Ship OTA fixes and features instantly, without waiting for app store review.</p>
+  <h2><a href="https://capgo.app/register/?ref=plugin_facebook_analytics">➡️ Get started for free</a></h2>
+  <p>14-day unlimited free trial. No credit card required</p>
+  <p><a href="https://capgo.app/consulting/?ref=plugin_facebook_analytics">Missing a feature? We'll build the plugin for you 💪</a></p>
 </div>
 
-Capacitor plugin for Meta/Facebook App Events analytics on iOS and Android.
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Cap-go/capacitor-facebook-analytics/main/assets/github-social-preview.png" alt="@capgo/capacitor-facebook-analytics for Capacitor apps" width="300" />
+</p>
+
+## Key features
+
+- **App Events**: `initAppEvents()` starts the Facebook SDK and activates App Events.
+- **Custom events**: `logEvent()` logs any event with parameters.
+- **Purchases**: `logPurchase()` logs revenue with currency.
+- **Advertiser tracking**: `enableAdvertiserTracking()`, `disableAdvertiserTracking()` and `getAdvertiserTrackingStatus()`, aligned with App Tracking Transparency on iOS.
+- **Platforms**: iOS and Android. Uses the official Facebook SDKs. Event logging is not available on web.
 
 ## Install
 
