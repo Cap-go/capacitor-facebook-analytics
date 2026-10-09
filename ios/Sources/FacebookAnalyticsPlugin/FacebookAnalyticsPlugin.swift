@@ -96,15 +96,12 @@ public class FacebookAnalyticsPlugin: CAPPlugin, CAPBridgedPlugin {
             return
         }
 
-        let selector = NSSelectorFromString("setIsAdvertiserTrackingEnabled:")
+        applyLegacyAdvertiserTrackingEnabled(enabled)
+    }
 
-        guard Settings.shared.responds(to: selector) else {
-            return
-        }
-
-        // FBSDK 18 deprecates the Swift setter even for legacy iOS paths.
-        // KVC preserves iOS 16-and-below behavior without a build warning.
-        Settings.shared.setValue(NSNumber(value: enabled), forKey: "isAdvertiserTrackingEnabled")
+    @available(iOS, obsoleted: 17.0)
+    private func applyLegacyAdvertiserTrackingEnabled(_ enabled: Bool) {
+        Settings.shared.isAdvertiserTrackingEnabled = enabled
     }
 
     private func getAdvertiserTrackingStatus() -> Bool {
