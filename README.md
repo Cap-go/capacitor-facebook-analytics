@@ -117,6 +117,34 @@ Add the string resources in `android/app/src/main/res/values/strings.xml`:
 <string name="facebook_client_token">YOUR_FACEBOOK_CLIENT_TOKEN</string>
 ```
 
+## Facebook SDK versions
+
+This plugin integrates the official Meta Facebook SDKs. Default versions:
+
+| Platform | Artifact | Default version |
+|----------|----------|-----------------|
+| iOS (CocoaPods) | `FBSDKCoreKit` | `~> 19.0` (resolves to the latest 19.x, currently **19.0.1**) |
+| iOS (SwiftPM) | [meta/facebook-ios-sdk](https://github.com/meta/facebook-ios-sdk/) | **19.0.1** minimum (`upToNextMajor`) |
+| Android | `com.facebook.android:facebook-core` | **19.0.1** |
+
+iOS requires **iOS 15.0** or newer, matching Facebook SDK 19 and this plugin's deployment target.
+
+### Override the Android SDK version
+
+In your Capacitor app root `android/variables.gradle` (or `android/build.gradle`):
+
+```gradle
+ext {
+    facebookSdkVersion = '19.0.1'
+}
+```
+
+Gradle passes `rootProject.ext.facebookSdkVersion` into the plugin. Use any compatible 19.x release published on Maven Central.
+
+### iOS dependency resolution
+
+The plugin owns the iOS SDK pins in `CapgoCapacitorFacebookAnalytics.podspec` and `Package.swift`. Upgrade the plugin to get a new default iOS SDK major line. After upgrading, run `bunx cap sync ios`, then `pod install` or let Xcode resolve Swift packages.
+
 ## Troubleshooting
 
 ### `"FacebookAnalytics" plugin is not implemented on android`
