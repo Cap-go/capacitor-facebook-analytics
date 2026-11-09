@@ -129,6 +129,8 @@ This plugin integrates the official Meta Facebook SDKs. Default versions:
 
 iOS requires **iOS 15.0** or newer, matching Facebook SDK 19 and this plugin's deployment target.
 
+**Breaking change (iOS):** This release raises the default `FBSDKCoreKit` pin to 19.x. Plugin major version follows Capacitor 8; native Facebook SDK major bumps ship in minor plugin releases rather than a new plugin major. If your app must keep Facebook SDK 18, pin `@capgo/capacitor-facebook-analytics` to the last published release before this SDK bump until you can move to SDK 19.
+
 ### Override the Android SDK version
 
 In your Capacitor app root `android/variables.gradle` (or `android/build.gradle`):
@@ -147,7 +149,7 @@ The plugin owns the iOS SDK pins in `CapgoCapacitorFacebookAnalytics.podspec` an
 
 SwiftPM uses the `facebook-ios-sdk` package identity with the `https://github.com/facebook/facebook-ios-sdk.git` URL so resolution stays compatible when other dependencies still reference that location or name. The SDK home is [meta/facebook-ios-sdk](https://github.com/meta/facebook-ios-sdk/).
 
-If `Podfile.lock` still pins `FBSDKCoreKit` 18.x, `pod install` alone may not satisfy the plugin `~> 19.0` requirement. From the directory that contains your `Podfile`, run `pod update FBSDKCoreKit` (or `bundle exec pod update FBSDKCoreKit` when CocoaPods runs through Bundler), then run `cap sync ios` again. Use `pod update FBSDKCoreKit` when you need a newer compatible 19.x release after you already lock a 19.x version.
+If `Podfile.lock` still pins `FBSDKCoreKit` 18.x, `pod install` alone may not satisfy the plugin `~> 19.0` requirement. From the directory that contains your `Podfile`, run `pod update FBSDKCoreKit` (or `bundle exec pod update FBSDKCoreKit` when CocoaPods runs through Bundler), then run `bunx cap sync ios` or `npx cap sync ios` again. Use `pod update FBSDKCoreKit` when you need a newer compatible 19.x release after you already lock a 19.x version.
 
 ## Troubleshooting
 
