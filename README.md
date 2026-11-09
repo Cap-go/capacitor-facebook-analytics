@@ -123,7 +123,7 @@ This plugin integrates the official Meta Facebook SDKs. Default versions:
 
 | Platform | Artifact | Default version |
 |----------|----------|-----------------|
-| iOS (CocoaPods) | `FBSDKCoreKit` | `~> 19.0` (resolves to the latest 19.x, currently **19.0.1**) |
+| iOS (CocoaPods) | `FBSDKCoreKit` | `~> 19.0` (allows 19.x; `pod install` keeps a compatible locked version) |
 | iOS (SwiftPM) | [meta/facebook-ios-sdk](https://github.com/meta/facebook-ios-sdk/) | **19.0.1** minimum (`upToNextMajor`) |
 | Android | `com.facebook.android:facebook-core` | **19.0.1** |
 
@@ -143,7 +143,11 @@ Gradle passes `rootProject.ext.facebookSdkVersion` into the plugin. Use any comp
 
 ### iOS dependency resolution
 
-The plugin owns the iOS SDK pins in `CapgoCapacitorFacebookAnalytics.podspec` and `Package.swift`. Upgrade the plugin to get a new default iOS SDK major line. After upgrading, run `bunx cap sync ios`, then `pod install` or let Xcode resolve Swift packages.
+The plugin owns the iOS SDK pins in `CapgoCapacitorFacebookAnalytics.podspec` and `Package.swift`. Upgrade the plugin to get a new default iOS SDK major line. After upgrading, run `bunx cap sync ios` or `npx cap sync ios`, then `pod install` or let Xcode resolve Swift packages.
+
+SwiftPM uses the `facebook-ios-sdk` package identity with the `https://github.com/facebook/facebook-ios-sdk.git` URL so resolution stays compatible when other dependencies still reference that location or name. The SDK home is [meta/facebook-ios-sdk](https://github.com/meta/facebook-ios-sdk/).
+
+If `Podfile.lock` still pins `FBSDKCoreKit` 18.x, `pod install` alone may not satisfy the plugin `~> 19.0` requirement. From the directory that contains your `Podfile`, run `pod update FBSDKCoreKit` (or `bundle exec pod update FBSDKCoreKit` when CocoaPods runs through Bundler), then run `cap sync ios` again. Use `pod update FBSDKCoreKit` when you need a newer compatible 19.x release after you already lock a 19.x version.
 
 ## Troubleshooting
 
