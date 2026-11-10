@@ -117,6 +117,77 @@ Add the string resources in `android/app/src/main/res/values/strings.xml`:
 <string name="facebook_client_token">YOUR_FACEBOOK_CLIENT_TOKEN</string>
 ```
 
+## Facebook SDK versions
+
+This plugin integrates the official Meta Facebook SDKs. Default versions:
+
+| Platform | Artifact | Default version |
+|----------|----------|-----------------|
+| iOS (CocoaPods) | `FBSDKCoreKit` | `~> 19.0` (allows 19.x; `pod install` keeps a compatible locked version) |
+| iOS (SwiftPM) | [meta/facebook-ios-sdk](https://github.com/meta/facebook-ios-sdk/) | **19.0.1** minimum (`upToNextMajor`) |
+| Android | `com.facebook.android:facebook-core` | **19.0.1** |
+
+iOS requires **iOS 15.0** or newer, matching Facebook SDK 19 and this plugin's deployment target.
+
+**Breaking change (iOS):** This release raises the default `FBSDKCoreKit` pin to 19.x. Plugin major version follows Capacitor 8; native Facebook SDK major bumps ship in minor plugin releases rather than a new plugin major. If your app must keep Facebook SDK 18, pin `@capgo/capacitor-facebook-analytics` to the last published release before this SDK bump until you can move to SDK 19.
+
+### Override the Android SDK version
+
+In your Capacitor app root `android/variables.gradle` (or `android/build.gradle`):
+
+```gradle
+ext {
+    facebookSdkVersion = '19.0.1'
+}
+```
+
+Gradle passes `rootProject.ext.facebookSdkVersion` into the plugin. Use any compatible 19.x release published on Maven Central.
+
+### Metadata collection and product improvement (SDK 19)
+
+Facebook SDK 19 turns two extra collection features on by default. This plugin does not set either flag, so apps that upgrade to the plugin's SDK 19 pins inherit those defaults. Both features are independent of automatic App Event logging. Setting `com.facebook.sdk.AutoLogAppEventsEnabled` or `FacebookAutoLogAppEventsEnabled` to `false` does not turn them off.
+
+**Event metadata (`AutoLogMetaDataEnabled`)**
+
+Starting on 31 October 2026, the SDK includes the current screen title and the AppLink URL with events logged through the Facebook SDK. This is on by default. Disable it with the snippets below, or turn off "Automatically include more app event details" in Events Manager.
+
+**Product improvement (`AutoLogProductImprovementEnabled`)**
+
+The SDK can also automatically send sampled information about your app, such as the layout of elements on app screens. Meta says this helps improve ads systems and build new features, and is not used for ads delivery. This is on by default and is independent of metadata collection and automatic App Event logging. Disable it with the snippets below, or turn off "Automatically send more app information" in Events Manager.
+
+Set the Android manifest and iOS Info.plist values before Meta SDK initialization (before `FacebookInitProvider` on Android or early FBSDK setup on iOS). Runtime assignments are persisted and take precedence over the manifest or Info.plist values on later launches.
+
+**Android** (app `AndroidManifest.xml`):
+
+```xml
+<meta-data android:name="com.facebook.sdk.AutoLogMetaDataEnabled" android:value="false" />
+<meta-data android:name="com.facebook.sdk.AutoLogProductImprovementEnabled" android:value="false" />
+```
+
+**iOS** (`Info.plist`):
+
+```xml
+<key>FBSDKAutoLogMetaDataEnabled</key>
+<false/>
+<key>FBSDKAutoLogProductImprovementEnabled</key>
+<false/>
+```
+
+At runtime:
+
+- Android: you can call `FacebookSdk.setAutoLogMetaDataEnabled(false)` and `FacebookSdk.setAutoLogProductImprovementEnabled(false)` before initialization.
+- iOS: set `Settings.shared.isMetaDataCollectionEnabled = false` and `Settings.shared.isAutoLogProductImprovementEnabled = false` after Meta SDK initialization. A previously persisted value takes precedence over Info.plist until you change it at runtime.
+
+Setting the metadata flag to `false` clears cached metadata on the device, including the stored screen title and AppLink URLs. Metadata already attached to queued events may still be sent after the flag is disabled. Collection requires both the client flag and the server-side Events Manager control to be enabled.
+
+### iOS dependency resolution
+
+The plugin owns the iOS SDK pins in `CapgoCapacitorFacebookAnalytics.podspec` and `Package.swift`. Upgrade the plugin to get a new default iOS SDK major line. After upgrading, run `bunx cap sync ios` or `npx cap sync ios`, then `pod install` or let Xcode resolve Swift packages.
+
+SwiftPM uses the `facebook-ios-sdk` package identity with the `https://github.com/facebook/facebook-ios-sdk.git` URL so resolution stays compatible when other dependencies still reference that location or name. The SDK home is [meta/facebook-ios-sdk](https://github.com/meta/facebook-ios-sdk/).
+
+If `Podfile.lock` still pins `FBSDKCoreKit` 18.x, `pod install` alone may not satisfy the plugin `~> 19.0` requirement. From the directory that contains your `Podfile`, run `pod update FBSDKCoreKit` (or `bundle exec pod update FBSDKCoreKit` when CocoaPods runs through Bundler), then run `bunx cap sync ios` or `npx cap sync ios` again. Use `pod update FBSDKCoreKit` when you need a newer compatible 19.x release after you already lock a 19.x version.
+
 ## Troubleshooting
 
 ### `"FacebookAnalytics" plugin is not implemented on android`
@@ -328,7 +399,9 @@ Event parameters keyed by Facebook standard parameter names or custom names.
 
 Construct a type with a set of properties K of type T
 
-<code>{ [P in K]: T; }</code>
+<code>{
+ [P in K]: T;
+ }</code>
 
 
 #### FacebookEventParamValue
