@@ -143,16 +143,25 @@ ext {
 
 Gradle passes `rootProject.ext.facebookSdkVersion` into the plugin. Use any compatible 19.x release published on Maven Central.
 
-### Metadata collection opt-out (SDK 19)
+### Metadata collection and product improvement (SDK 19)
 
-Facebook SDK 19 can attach metadata to App Events, including the current screen title and inbound app link URLs (including query parameters). This is independent of automatic App Event logging. On Android, `com.facebook.sdk.AutoLogAppEventsEnabled` = `false` does not disable metadata collection.
+Facebook SDK 19 turns two extra collection features on by default. This plugin does not set either flag, so apps that upgrade to the plugin's SDK 19 pins inherit those defaults. Both features are independent of automatic App Event logging. Setting `com.facebook.sdk.AutoLogAppEventsEnabled` or `FacebookAutoLogAppEventsEnabled` to `false` does not turn them off.
 
-Set these native values before Meta SDK initialization (before `FacebookInitProvider` on Android or early FBSDK setup on iOS).
+**Event metadata (`AutoLogMetaDataEnabled`)**
+
+Starting on 31 October 2026, the SDK includes the current screen title and the AppLink URL with events logged through the Facebook SDK. This is on by default. Disable it with the snippets below, or turn off "Automatically include more app event details" in Events Manager.
+
+**Product improvement (`AutoLogProductImprovementEnabled`)**
+
+The SDK can also automatically send sampled information about your app, such as the layout of elements on app screens. Meta says this helps improve ads systems and build new features, and is not used for ads delivery. This is on by default and is independent of metadata collection and automatic App Event logging. Disable it with the snippets below, or turn off "Automatically send more app information" in Events Manager.
+
+Set these native values before Meta SDK initialization (before `FacebookInitProvider` on Android or early FBSDK setup on iOS). Runtime assignments are persisted and take precedence over the manifest or Info.plist values on later launches.
 
 **Android** (app `AndroidManifest.xml`):
 
 ```xml
 <meta-data android:name="com.facebook.sdk.AutoLogMetaDataEnabled" android:value="false" />
+<meta-data android:name="com.facebook.sdk.AutoLogProductImprovementEnabled" android:value="false" />
 ```
 
 **iOS** (`Info.plist`):
@@ -160,9 +169,16 @@ Set these native values before Meta SDK initialization (before `FacebookInitProv
 ```xml
 <key>FBSDKAutoLogMetaDataEnabled</key>
 <false/>
+<key>FBSDKAutoLogProductImprovementEnabled</key>
+<false/>
 ```
 
-At runtime, Android apps can call `FacebookSdk.setAutoLogMetaDataEnabled(false)` and iOS apps can set `Settings.shared.isMetaDataCollectionEnabled = false` before initialization. Meta may still gate collection with a server-side feature flag.
+At runtime, call these before initialization:
+
+- Android: `FacebookSdk.setAutoLogMetaDataEnabled(false)` and `FacebookSdk.setAutoLogProductImprovementEnabled(false)`
+- iOS: `Settings.shared.isMetaDataCollectionEnabled = false` and `Settings.shared.isAutoLogProductImprovementEnabled = false`
+
+Setting the metadata flag to `false` also discards metadata already collected on the device, including stored AppLink URLs. Meta may still gate collection with a server-side Events Manager control. Data is sent only when both the client flag and that control are enabled.
 
 ### iOS dependency resolution
 
@@ -383,7 +399,9 @@ Event parameters keyed by Facebook standard parameter names or custom names.
 
 Construct a type with a set of properties K of type T
 
-<code>{ [P in K]: T; }</code>
+<code>{
+ [P in K]: T;
+ }</code>
 
 
 #### FacebookEventParamValue
