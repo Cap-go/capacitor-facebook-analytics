@@ -143,6 +143,27 @@ ext {
 
 Gradle passes `rootProject.ext.facebookSdkVersion` into the plugin. Use any compatible 19.x release published on Maven Central.
 
+### Metadata collection opt-out (SDK 19)
+
+Facebook SDK 19 can attach metadata to App Events, including the current screen title and inbound app link URLs (including query parameters). This is independent of automatic App Event logging. On Android, `com.facebook.sdk.AutoLogAppEventsEnabled` = `false` does not disable metadata collection.
+
+Set these native values before Meta SDK initialization (before `FacebookInitProvider` on Android or early FBSDK setup on iOS).
+
+**Android** (app `AndroidManifest.xml`):
+
+```xml
+<meta-data android:name="com.facebook.sdk.AutoLogMetaDataEnabled" android:value="false" />
+```
+
+**iOS** (`Info.plist`):
+
+```xml
+<key>FBSDKAutoLogMetaDataEnabled</key>
+<false/>
+```
+
+At runtime, Android apps can call `FacebookSdk.setAutoLogMetaDataEnabled(false)` and iOS apps can set `Settings.shared.isMetaDataCollectionEnabled = false` before initialization. Meta may still gate collection with a server-side feature flag.
+
 ### iOS dependency resolution
 
 The plugin owns the iOS SDK pins in `CapgoCapacitorFacebookAnalytics.podspec` and `Package.swift`. Upgrade the plugin to get a new default iOS SDK major line. After upgrading, run `bunx cap sync ios` or `npx cap sync ios`, then `pod install` or let Xcode resolve Swift packages.
